@@ -1,0 +1,301 @@
+# Default config for sway
+#
+# Copy this to ~/.config/sway/config and edit it to your liking.
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Your preferred terminal emulator
+set $term alacritty
+# Your preferred application launcher
+# Note: pass the final command to swaymsg so that the resulting window can be opened
+# on the original workspace that the command was run on.
+# set $menu dmenu_path | dmenu | xargs swaymsg exec --
+set $menu wofi --show drun | xargs swaymsg exec --
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+#
+# Example configuration:
+#
+#   output HDMI-A-1 resolution 1920x1080 position 1920,0
+#
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+set $out1 DP-2
+# 'VIE NB-IGM24B Unknown'
+set $out2 DP-1
+# 'Iiyama North America PL2474H 11668V9B00675'
+set $out3 HDMI-A-1
+# 'Acer Technologies Acer K242HQL T2JSJ0054224'
+
+output $out3 pos 3840 0 mode 1920x1080@60Hz scale 1 background /usr/share/backgrounds/archlinux/simple.png fill
+output $out2 pos 1920 0 mode 1920x1080@60Hz scale 1 background /usr/share/backgrounds/japanese_arch.png fill
+output $out1 pos 0 0 mode 1920x1080@165Hz scale 1 background /usr/share/backgrounds/wallpaper.png fill
+
+### Idle configuration
+#
+# Example configuration:
+#
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#          before-sleep 'swaylock -f -c 000000'
+#
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
+
+### Input configuration
+#
+# Example configuration:
+#
+#   input "2:14:SynPS/2_Synaptics_TouchPad" {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+input type:keyboard {
+    xkb_layout jp
+    xkb_numlock enabled
+    xkb_options "numpad:mac"
+}
+input type:pointer {
+    pointer_accel -0.8
+}
+input 1386:891:Wacom_One_by_Wacom_M_Pen {
+    map_to_output DP-1
+}
+
+### Key bindings
+#
+# Basics:
+#
+    # Start a terminal
+    bindsym $mod+Return exec $term
+    bindsym $mod+KP_Enter exec $term
+
+    # Kill focused window
+    bindsym $mod+Alt+c kill
+
+    # Start your launcher
+    bindsym $mod+x exec $menu
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    bindsym $mod+Alt+r reload
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $mod+Alt+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+    bindsym Zenkaku_Hankaku exec zenkaku-hankaku-toggle
+
+    bindsym XF86AudioMute exec toggle-mute
+    bindsym Pause exec toggle-linein
+    bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +2.5%
+    bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -2.5%
+    bindcode --whole-window 279 exec pactl set-sink-volume @DEFAULT_SINK@ +2.5%
+    bindcode --whole-window 278 exec pactl set-sink-volume @DEFAULT_SINK@ -2.5%
+    bindsym Alt+XF86AudioRaiseVolume exec pactl set-source-output-volume 0 +5%
+    bindsym Alt+XF86AudioLowerVolume exec pactl set-source-output-volume 0 -5%
+
+    bindsym Print exec grimshot --notify save area - | wl-copy
+
+    bindsym XF86AudioPlay exec playerctl play-pause
+    bindsym Alt+XF86AudioPlay exec playerctl -a play-pause
+    bindsym $mod+XF86AudioPlay exec playerctl -a pause
+    bindcode --whole-window 277 exec playerctl play-pause
+
+    bindsym XF86Tools exec firefox-developer-edition | xargs swaymsg exec --
+    bindsym XF86Launch5 exec alacritty --command nvim-select | xargs swaymsg exec --
+    bindsym XF86Launch6 exec thunar | xargs swaymsg exec --
+    bindsym XF86Launch7 exec vlc | xargs swaymsg exec --
+
+    bindsym XF86Launch8 exec chromium | xargs swaymsg exec --
+    
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Alt
+    bindsym $mod+Alt+Left move left
+    bindsym $mod+Alt+Down move down
+    bindsym $mod+Alt+Up move up
+    bindsym $mod+Alt+Right move right
+
+    bindsym $mod+Shift+Left exec sway-overfocus split-lt float-lt output-ls
+    bindsym $mod+Shift+Down exec sway-overfocus split-dt float-dt output-ds
+    bindsym $mod+Shift+Up exec sway-overfocus split-ut float-ut output-us
+    bindsym $mod+Shift+Right exec sway-overfocus split-rt float-rt output-rs
+#
+# Workspaces:
+#
+    workspace 1_1 output $out1
+    workspace 1_2 output $out1
+    workspace 1_3 output $out1
+    workspace 2_1 output $out2
+    workspace 2_2 output $out2
+    workspace 2_3 output $out2
+    workspace 3_1 output $out3
+    workspace 3_2 output $out3
+    workspace 3_3 output $out3
+
+    # Switch to workspace
+    bindsym $mod+p workspace next_on_output
+    bindsym $mod+l workspace prev_on_output
+
+    # Move focused container to workspace
+    bindsym $mod+Alt+p move container to workspace next_on_output
+    bindsym $mod+Alt+l move container to workspace prev_on_output
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Alt+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+space focus mode_toggle
+
+    # Move focus to the parent container
+    bindsym $mod+a focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $mod+Alt+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+mode "temp_lock" {
+    bindsym Control+Alt+Delete \
+        output $out1 enable; \
+        output $out2 enable; \
+        output $out3 enable; \
+        mode "default"
+}
+
+#
+# Double press ScrollLock to enable
+# "Emergency Evacuation" on a current
+# focused window.
+#
+# Don't ask me why this exists, and
+# What is this for.
+# Keep it secret.
+#
+mode "special" {
+    # 1. Hide current focused window to scratchpad
+    # 2. Mute current pulseaudio sink
+    # 3. Pretend that it never happened
+    bindsym Scroll_Lock \
+        move scratchpad; \
+        exec pactl set-sink-mute 0 1; \
+        brightnessctl --device=input*::capslock s 0; \
+        mode "default"
+
+    bindsym Print \
+        output $out1 disable; \
+        output $out2 disable; \
+        output $out3 disable; \
+        mode "temp_lock" 
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym Scroll_Lock mode "special"
+
+gaps inner 5
+default_border pixel 2
+
+for_window [app_id="flameshot"] border pixel 0, floating enable, fullscreen disable, move absolute position 0 0
+for_window [app_id="one.alynx.showmethekey" title="Floating Window - Show Me The Key"], floating enable, sticky enable
+for_window [app_id="waybar" floating] gap inner 0, default_border pixel 0
+for_window [app_id="zenity"] floating enable
+
+# for_window [app_id="foot"] opacity 0.9
+#for_window [all] opacity 0.9
+#for_window [app_id="firefoxdeveloperedition"] opacity 1
+#for_window [floating] opacity 1
+for_window [all] border pixel 3
+
+# tray apps and waybar
+exec blueman-applet
+exec solaar -w hide
+exec mako
+exec fcitx5
+exec waybar
+
+# disable line-in by default
+exec brightnessctl --device=input*::scrolllock s 0
+exec pactl set-source-output-mute 0 1
+
+# enable audio out by default
+exec brightnessctl --device=input*::capslock s 1
+exec pactl set-sink-mute 0 0
+
+# system processes
+exec wl-paste -t text --watch clipman store --no-persist
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec xhost +
+
+# decorations
+exec beep -f 988 -l 100 -n -f 1319 -l 400
+
+include /etc/sway/config.d/*

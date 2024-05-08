@@ -1,0 +1,48 @@
+* {
+    font-family: "Cascadia Mono Regular";
+    font-size: 16px;
+}
+ 
+window {
+    border: 2px solid rgba(18, 14, 18, 0.8);
+    border-radius: 8px;
+    background-color: rgba(36, 36, 36, 0.9);
+}
+ 
+#input {
+    margin-bottom: 15px;
+    padding:3px;
+    border-radius: 5px;
+    border: none;
+    color: @primary_blue;
+}
+ 
+#inner-box {
+    background-color: @base_alt;
+    box-shadow: -4px -3px 45px 21px rgba(0,0,0,0.35);
+}
+ 
+#outer-box {
+    margin: 5px;
+    padding: 10px;
+    background-color: @base;
+    border-radius: 15px;
+}
+ 
+#text {
+    padding: 5px;
+    color: @primary_blue;
+}
+ 
+#entry {
+    padding: 10px;
+}
+ 
+#entry:nth-child(even) {
+    background-color: @base;
+}
+ 
+#entry:selected {
+    background-color: @primary_yellow;
+}
+
