@@ -1,0 +1,9 @@
+{
+    "minimizeToTray": "on",
+    "discordBranch": "ptb",
+    "arRPC": "on",
+    "splashColor": "rgb(219, 222, 225)",
+    "splashBackground": "rgb(22, 22, 22)",
+    "disableSmoothScroll": true,
+    "splashTheming": false
+}
